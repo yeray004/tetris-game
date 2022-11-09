@@ -1,206 +1,252 @@
-var velocidad = 50000; //velocidad del juego
-var fpi, cpi, rot; //fila, columna y rotación de la ficha
-var tablero; //matriz con el tablero
-var pieza = 0; //pieza
-var record = 0; //almacena la mejor puntuación
-var lineas = 0; //almacena la  puntuación actual
-var pos = [
-    //Valores referencia de coordenadas relativas
-    [0, 0],
-    [0, 1],
-    [-1, 0],
-    [1, 0],
-    [-1, -1],
-    [0, -1],
-    [1, -1],
-    [0, -2],
-];
-var piezas = [
-    //Diseño de las piezas, el primer valor de cada fila corresponde con el número de rotaciones posibles
-    [4, 0, 1, 2, 3],
-    [4, 0, 1, 5, 6],
-    [4, 0, 1, 5, 4],
-    [2, 0, 1, 5, 7],
-    [2, 0, 2, 5, 6],
-    [2, 0, 3, 5, 4],
-    [1, 0, 5, 6, 3],
-];
-//Genera una nueva partida inicializando las variables
-function nuevaPartida() {
-    velocidad = 50000;
-    tablero = new Array(20);
-    for (var n = 0; n < 20; n++) {
-        tablero[n] = new Array(9);
-        for (var m = 0; m < 9; m++) {
-            tablero[n][m] = 0;
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.querySelector('.grid')
+    let squares = Array.from(document.querySelectorAll('.grid div'))
+    const scoreDisplay = document.querySelector('#score')
+    const startBtn = document.querySelector('#start-button')
+    const width = 10
+    let nextRandom = 0
+    let timerId
+    let score = 0
+    const colors = [
+        'orange',
+        'red',
+        'purple',
+        'green',
+        'blue'
+    ]
+
+    //The Tetrominoes
+    const lTetromino = [
+        [1, width + 1, width * 2 + 1, 2],
+        [width, width + 1, width + 2, width * 2 + 2],
+        [1, width + 1, width * 2 + 1, width * 2],
+        [width, width * 2, width * 2 + 1, width * 2 + 2]
+    ]
+
+    const zTetromino = [
+        [0, width, width + 1, width * 2 + 1],
+        [width + 1, width + 2, width * 2, width * 2 + 1],
+        [0, width, width + 1, width * 2 + 1],
+        [width + 1, width + 2, width * 2, width * 2 + 1]
+    ]
+
+    const tTetromino = [
+        [1, width, width + 1, width + 2],
+        [1, width + 1, width + 2, width * 2 + 1],
+        [width, width + 1, width + 2, width * 2 + 1],
+        [1, width, width + 1, width * 2 + 1]
+    ]
+
+    const oTetromino = [
+        [0, 1, width, width + 1],
+        [0, 1, width, width + 1],
+        [0, 1, width, width + 1],
+        [0, 1, width, width + 1]
+    ]
+
+    const iTetromino = [
+        [1, width + 1, width * 2 + 1, width * 3 + 1],
+        [width, width + 1, width + 2, width + 3],
+        [1, width + 1, width * 2 + 1, width * 3 + 1],
+        [width, width + 1, width + 2, width + 3]
+    ]
+
+    const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino]
+
+    let currentPosition = 4
+    let currentRotation = 0
+
+    console.log(theTetrominoes[0][0])
+
+    //randomly select a Tetromino and its first rotation
+    let random = Math.floor(Math.random() * theTetrominoes.length)
+    let current = theTetrominoes[random][currentRotation]
+
+    //draw the Tetromino
+    function draw() {
+        current.forEach(index => {
+            squares[currentPosition + index].classList.add('tetromino')
+            squares[currentPosition + index].style.backgroundColor = colors[random]
+        })
+    }
+
+    //undraw the Tetromino
+    function undraw() {
+        current.forEach(index => {
+            squares[currentPosition + index].classList.remove('tetromino')
+            squares[currentPosition + index].style.backgroundColor = ''
+
+        })
+    }
+
+    //assign functions to keyCodes
+    function control(e) {
+        if (e.keyCode === 37) {
+            moveLeft()
+        } else if (e.keyCode === 38) {
+            rotate()
+        } else if (e.keyCode === 39) {
+            moveRight()
+        } else if (e.keyCode === 40) {
+            moveDown()
         }
     }
-    lineas = 0;
-    nuevaPieza();
-}
-//Detecta si una fila columna del tablero está libre para ser ocupada
-function cuadroNoDisponible(f, c) {
-    if (f < 0) return false;
-    return c < 0 || c >= 9 || f >= 20 || tablero[f][c] > 0;
-}
-//Detecta si la pieza activa colisiona fuera del tablero o con otra pieza
-function colisionaPieza() {
-    for (var v = 1; v < 5; v++) {
-        var des = piezas[pieza][v];
-        var pos2 = rotarCasilla(pos[des]);
-        if (cuadroNoDisponible(pos2[0] + fpi, pos2[1] + cpi)) {
-            return true;
+    document.addEventListener('keyup', control)
+
+    //move down function
+    function moveDown() {
+        undraw()
+        currentPosition += width
+        draw()
+        freeze()
+    }
+
+    //freeze function
+    function freeze() {
+        if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
+            current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+            //start a new tetromino falling
+            random = nextRandom
+            nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+            current = theTetrominoes[random][currentRotation]
+            currentPosition = 4
+            draw()
+            displayShape()
+            addScore()
+            gameOver()
         }
     }
-    return false;
-}
-//Detecta si hay lineas completas y si las hay las computa y borra la linea desplazando la submatriz superior
-function detectarLineas() {
-    for (var f = 0; f < 20; f++) {
-        var contarCuadros = 0;
-        for (var c = 0; c < 9; c++) {
-            if (tablero[f][c] > 0) {
-                contarCuadros++;
+
+    //move the tetromino left, unless is at the edge or there is a blockage
+    function moveLeft() {
+        undraw()
+        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
+        if (!isAtLeftEdge) currentPosition -= 1
+        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            currentPosition += 1
+        }
+        draw()
+    }
+
+    //move the tetromino right, unless is at the edge or there is a blockage
+    function moveRight() {
+        undraw()
+        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1)
+        if (!isAtRightEdge) currentPosition += 1
+        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            currentPosition -= 1
+        }
+        draw()
+    }
+
+
+    ///FIX ROTATION OF TETROMINOS A THE EDGE 
+    function isAtRight() {
+        return current.some(index => (currentPosition + index + 1) % width === 0)
+    }
+
+    function isAtLeft() {
+        return current.some(index => (currentPosition + index) % width === 0)
+    }
+
+    function checkRotatedPosition(P) {
+        P = P || currentPosition       //get current position.  Then, check if the piece is near the left side.
+        if ((P + 1) % width < 4) {         //add 1 because the position index can be 1 less than where the piece is (with how they are indexed).     
+            if (isAtRight()) {            //use actual position to check if it's flipped over to right side
+                currentPosition += 1    //if so, add one to wrap it back around
+                checkRotatedPosition(P) //check again.  Pass position from start, since long block might need to move more.
             }
         }
-        if (contarCuadros == 9) {
-            for (var f2 = f; f2 > 0; f2--) {
-                for (var c2 = 0; c2 < 9; c2++) {
-                    tablero[f2][c2] = tablero[f2 - 1][c2];
-                }
+        else if (P % width > 5) {
+            if (isAtLeft()) {
+                currentPosition -= 1
+                checkRotatedPosition(P)
             }
-            lineas++;
         }
     }
-}
-//Baja la pieza, si toca otra pieza o el suelo, saca una nueva pieza
-function bajarPieza() {
-    fpi = fpi + 1;
-    if (colisionaPieza()) {
-        fpi = fpi - 1;
-        for (v = 1; v < 5; v++) {
-            des = piezas[pieza][v];
-            var pos2 = rotarCasilla(pos[des]);
-            if (
-                pos2[0] + fpi >= 0 &&
-                pos2[0] + fpi < 20 &&
-                pos2[1] + cpi >= 0 &&
-                pos2[1] + cpi < 9
-            ) {
-                tablero[pos2[0] + fpi][pos2[1] + cpi] = pieza + 1;
-            }
+
+    //rotate the tetromino
+    function rotate() {
+        undraw()
+        currentRotation++
+        if (currentRotation === current.length) { //if the current rotation gets to 4, make it go back to 0
+            currentRotation = 0
         }
-        detectarLineas();
-        //Si hay algun cuadro en la fila 0 reinicia el juego
-        var reiniciar = 0;
-        for (var c = 0; c < 9; c++) {
-            if (tablero[0][c] != 0) {
-                reiniciar = 1;
-            }
-        }
-        if (reiniciar == 1) {
-            if (lineas > record) {
-                record = lineas;
-            }
-            nuevaPartida();
+        current = theTetrominoes[random][currentRotation]
+        checkRotatedPosition()
+        draw()
+    }
+    /////////
+
+
+
+    //show up-next tetromino in mini-grid display
+    const displaySquares = document.querySelectorAll('.mini-grid div')
+    const displayWidth = 4
+    const displayIndex = 0
+
+
+    //the Tetrominos without rotations
+    const upNextTetrominoes = [
+        [1, displayWidth + 1, displayWidth * 2 + 1, 2], //lTetromino
+        [0, displayWidth, displayWidth + 1, displayWidth * 2 + 1], //zTetromino
+        [1, displayWidth, displayWidth + 1, displayWidth + 2], //tTetromino
+        [0, 1, displayWidth, displayWidth + 1], //oTetromino
+        [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1] //iTetromino
+    ]
+
+    //display the shape in the mini-grid display
+    function displayShape() {
+        //remove any trace of a tetromino form the entire grid
+        displaySquares.forEach(square => {
+            square.classList.remove('tetromino')
+            square.style.backgroundColor = ''
+        })
+        upNextTetrominoes[nextRandom].forEach(index => {
+            displaySquares[displayIndex + index].classList.add('tetromino')
+            displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
+        })
+    }
+
+    //add functionality to the button
+    startBtn.addEventListener('click', () => {
+        if (timerId) {
+            clearInterval(timerId)
+            timerId = null
         } else {
-            nuevaPieza();
+            draw()
+            timerId = setInterval(moveDown, 1000)
+            nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+            displayShape()
         }
-    }
-}
-//Mueve la pieza lateralmente
-function moverPieza(des) {
-    cpi = cpi + des;
-    if (colisionaPieza()) {
-        cpi = cpi - des;
-    }
-}
-//Rota la pieza según el número de rotaciones posibles tenga la pieza activa. (posición 0 de la pieza)
-function rotarPieza() {
-    rot = rot + 1;
-    if (rot == piezas[pieza][0]) {
-        rot = 0;
-    }
-    if (colisionaPieza()) {
-        rot = rot - 1;
-        if (rot == -1) {
-            rot = piezas[pieza][0] - 1;
-        }
-    }
-}
-//Obtiene unas coordenadas f,c y las rota 90 grados
-function rotarCasilla(celda) {
-    var pos2 = [celda[0], celda[1]];
-    for (var n = 0; n < rot; n++) {
-        var f = pos2[1];
-        var c = -pos2[0];
-        pos2[0] = f;
-        pos2[1] = c;
-    }
-    return pos2;
-}
-//Genera una nueva pieza aleatoriamente
-function nuevaPieza() {
-    cpi = 3;
-    fpi = 0;
-    rot = 0;
-    pieza = Math.floor(Math.random() * 7);
-}
-//Ejecución principal del juego, realiza la animación y repinta
-function tick() {
-    bajarPieza();
-    pintar();
-    setTimeout("tick()", velocidad / 100);
-}
-//Pinta el tablero (lo genera con html) y lo plasma en un div.
-function pintar() {
-    var lt = " <";
-    var des;
-    var html = "<table class='tetris'>";
-    for (var f = 0; f < 20; f++) {
-        html += "<tr>";
-        for (var c = 0; c < 9; c++) {
-            var color = tablero[f][c];
-            if (color == 0) {
-                for (v = 1; v < 5; v++) {
-                    des = piezas[pieza][v];
-                    var pos2 = rotarCasilla(pos[des]);
-                    if (f == fpi + pos2[0] && c == cpi + pos2[1]) {
-                        color = pieza + 1;
-                    }
-                }
+    })
+
+    //add score
+    function addScore() {
+        for (let i = 0; i < 199; i += width) {
+            const row = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8, i + 9]
+
+            if (row.every(index => squares[index].classList.contains('taken'))) {
+                score += 10
+                scoreDisplay.innerHTML = score
+                row.forEach(index => {
+                    squares[index].classList.remove('taken')
+                    squares[index].classList.remove('tetromino')
+                    squares[index].style.backgroundColor = ''
+                })
+                const squaresRemoved = squares.splice(i, width)
+                squares = squaresRemoved.concat(squares)
+                squares.forEach(cell => grid.appendChild(cell))
             }
-            html += "<td class='celda" + color + "'/>";
         }
-        html += lt + "/tr>";
     }
-    html += lt + "/table>";
-    html += "<br />Lineas : " + lineas;
-    html += "<br />Record : " + record;
-    document.getElementById("tetris").innerHTML = html;
-    velocidad = Math.max(velocidad - 1, 500);
-}
-//Al iniciar la pagina inicia el juego
-function eventoCargar() {
-    nuevaPartida();
-    setTimeout("tick()", 1);
-}
-//Al pulsar una tecla
-function tecla(e) {
-    var characterCode = e && e.which ? e.which : e.keyCode;
-    switch (characterCode) {
-        case 37:
-            moverPieza(-1);
-            break;
-        case 38:
-            rotarPieza();
-            break;
-        case 39:
-            moverPieza(1);
-            break;
-        case 40:
-            bajarPieza();
-            break;
+
+    //game over
+    function gameOver() {
+        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+            scoreDisplay.innerHTML = 'end'
+            clearInterval(timerId)
+        }
     }
-    pintar();
-}
+
+})
