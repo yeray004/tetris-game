@@ -135,18 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
     //--------------------------------------------------move the tetromino left, unless is at the edge or there is a blockage yy
     function moveLeft() { //Se crea la función moveLeft
         undraw() //Des dibuja la figura
-        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0) //Se crea una variable 
-        if (!isAtLeftEdge) currentPosition -= 1
+        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0) /* Se crea una variable que con el
+        currentPosition y su item (index0) dividido por su ancho deje exactamente 0 en su residuo */
+
+        if (!isAtLeftEdge) currentPosition -= 1 /* si el statement es ture el bang (!) hará que este sea falso, ejecuntamdo el if
+        y permitiendo que la figura se pueda desplazar a la izquierda */
+
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-            currentPosition += 1
+            currentPosition += 1 //Si alguno de los tetrominos va hacia la izquierda y choca con un square de clase taken retrocede un espacio
         }
-        draw()
+        draw() //Dibuja la figura
     }
 
-    //move the tetromino right, unless is at the edge or there is a blockage
+    //--------------------------------------------------move the tetromino right, unless is at the edge or there is a blockage
     function moveRight() {
         undraw()
-        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1)
+        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1) //
         if (!isAtRightEdge) currentPosition += 1
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
             currentPosition -= 1
@@ -155,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    ///FIX ROTATION OF TETROMINOS A THE EDGE yy
+    //--------------------------------------------------FIX ROTATION OF TETROMINOS A THE EDGE yy
     function isAtRight() {
         return current.some(index => (currentPosition + index + 1) % width === 0)
     }
@@ -180,29 +184,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //rotate the tetromino
+    //--------------------------------------------------rotate the tetromino
     function rotate() {
-        undraw()
-        currentRotation++
+        undraw() //Desdibuja la fugra
+        currentRotation++ //pasa por cada uno de los arrays con un increment operator
         if (currentRotation === current.length) { //if the current rotation gets to 4, make it go back to 0
-            currentRotation = 0
+            currentRotation = 0 //Regresa a 0
         }
-        current = theTetrominoes[random][currentRotation]
+        current = theTetrominoes[random][currentRotation] //Si es falso vuelve a su código base
         checkRotatedPosition()
-        draw()
+        draw() //Se dibuja la figura
     }
     /////////
 
 
 
-    //show up-next tetromino in mini-grid display yy
-    const displaySquares = document.querySelectorAll('.mini-grid div')
-    const displayWidth = 4
-    const displayIndex = 0
+    //--------------------------------------------------show up-next tetromino in mini-grid display yy
+    //Creamos tres variables
+    const displaySquares = document.querySelectorAll('.mini-grid div') //Seleccionamos dentro del documento todos los elementos de clase .mini-grid y etiquetas div
+    const displayWidth = 4 //width de nuestros tetrominos
+    const displayIndex = 0 //index 0 de nuestros tetrominos (posición)
 
 
-    //the Tetrominos without rotations
-    const upNextTetrominoes = [
+    //--------------------------------------------------the Tetrominos without rotations
+    const upNextTetrominoes = [ //Creamos un array con la figura inicial de los tetrominos
         [1, displayWidth + 1, displayWidth * 2 + 1, 2], //lTetromino
         [0, displayWidth, displayWidth + 1, displayWidth * 2 + 1], //zTetromino
         [1, displayWidth, displayWidth + 1, displayWidth + 2], //tTetromino
@@ -210,56 +215,67 @@ document.addEventListener('DOMContentLoaded', () => {
         [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1] //iTetromino
     ]
 
-    //display the shape in the mini-grid display yy
-    function displayShape() {
-        //remove any trace of a tetromino form the entire grid
+    //--------------------------------------------------display the shape in the mini-grid display yy
+    function displayShape() { //Se crea lafunción displayShape
+        //removemos  cualquier rastro de los tetrominos de todo el grid
         displaySquares.forEach(square => {
-            square.classList.remove('tetromino')
+            square.classList.remove('tetromino') //removemos la clase de tetromino
             square.style.backgroundColor = ''
         })
-        upNextTetrominoes[nextRandom].forEach(index => {
-            displaySquares[displayIndex + index].classList.add('tetromino')
+        //Llamamos la variable de nextRandom 
+        upNextTetrominoes[nextRandom].forEach(index => {//para cada nextRandom hacemos lo siguiente
+            displaySquares[displayIndex + index].classList.add('tetromino') //Añadimos la clase tetromino
             displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
         })
     }
 
-    //add functionality to the button
-    startBtn.addEventListener('click', () => {
+    //--------------------------------------------------add functionality to the button
+    startBtn.addEventListener('click', () => {//Añadomos un evento de click al botón
+        //Si el botón es presionado restablecemos el tiempo de intervalo a 0 (timerId = setInterval(moveDown, 1000) -> timerId = setInterval(0))
         if (timerId) {
-            clearInterval(timerId)
-            timerId = null
-        } else {
-            draw()
-            timerId = setInterval(moveDown, 1000)
-            nextRandom = Math.floor(Math.random() * theTetrominoes.length)
-            displayShape()
+            clearInterval(timerId)//Usamos el mpetodo clearInterval y en su parámetro seleccionamos el timerId
+            timerId = null //El tiempo de 1000 ns ahora será de 0
+        } else {//Si el botón vuelve a ser presionado
+            draw()//Se dibuja la figura en el grid principal
+            timerId = setInterval(moveDown, 1000)//Se activa el timerId con la función moveDown cada 1000ms
+            nextRandom = Math.floor(Math.random() * theTetrominoes.length) //Se seleciona la proxima figura que queremos que aparezca en el mini-grid
+            displayShape()//Dibuja la figura acabada de determinar con nextRandom
         }
     })
 
-    //add score yy
-    function addScore() {
-        for (let i = 0; i < 374; i += width) {
-            const row = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8, i + 9, i + 10, i +11, i + 12, i + 13, i + 14]
+    //--------------------------------------------------add score yy
+    function addScore() {//Se crea la función addScore
+        for (let i = 0; i < 374; i += width) { //se añade una nueva fila si el número de divs es menor a 374 (cantidad de elementos de dis contados como array)
+            const row = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8, i + 9, i + 10, i +11, i + 12, i + 13, i + 14] /* Cantidad de divs en el ancho
+            del juego (15 en nuestro caso) representadas dentro de una variable constante*/
 
-            if (row.every(index => squares[index].classList.contains('taken'))) {
-                score += 15
-                scoreDisplay.innerHTML = score
-                row.forEach(index => {
-                    squares[index].classList.remove('taken')
-                    squares[index].classList.remove('tetromino')
-                    squares[index].style.backgroundColor = ''
+            if (row.every(index => squares[index].classList.contains('taken'))) {//Si cada uno de los skuares dentro de una fila contienen la clase taken
+                score += 15 //Se añade 15 al score
+                scoreDisplay.innerHTML = score //se muestra el resultado con el método innerHMTL
+                row.forEach(index => { //para cada index/item de una fila
+                    squares[index].classList.remove('taken')//se remueve la clase de taken
+                    squares[index].classList.remove('tetromino')/* se remueve la clase de tetromino (de esta manera los elemenos del appendChild
+                    no reapareceran en la parte superior de la cuadrícula) */
+
+                    squares[index].style.backgroundColor = ''//color de los cuadrados
                 })
-                const squaresRemoved = squares.splice(i, width)
-                squares = squaresRemoved.concat(squares)
-                squares.forEach(cell => grid.appendChild(cell))
+                const squaresRemoved = squares.splice(i, width)//eliminamos la fila creando una varible y eliminando squares co  el método .splice()
+                squares = squaresRemoved.concat(squares)//juntamos los array de squares dentro de squaresRemoved usando el método de .concat
+                squares.forEach(cell => grid.appendChild(cell))//para cada fila eliminada añadimos otra con appendChild
             }
         }
     }
 
-    //game over
-    function gameOver() {
+    //--------------------------------------------------game over
+    function gameOver() { //se crea la función gameOver
+
+        //Si alguno de los suquares actuales contiene la clase de taken
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+
+            //Termina el contador de score y reemplaza el conenido por "end"
             scoreDisplay.innerHTML = 'end'
+
+            //Termina el intervalo
             clearInterval(timerId)
         }
     }
