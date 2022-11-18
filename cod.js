@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerId
     let score = 0
     const colors = [
-        'orange',
-        'red',
-        'purple',
-        'green',
-        'blue'
+        '#ffce2e',
+        '#ff8775',
+        '#bc70ff',
+        '#9BFBE1',
+        '#19e8ff'
     ]
 
     //The Tetrominoes Cata
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //--------------------------------------------------randomly select a Tetromino and its first rotation yy
 
-    /*  Para esta parte del código utilizamos los siguientes métodos:
+    /*  Para esta parcolorste del código utilizamos los siguientes métodos:
     Math.random() -> Nos da un número random de los elementos de array junto al .length
     .length       -> Es un metodo introducído que nos ayuda a saber qué tan largo es nuestro array
     Math.floor()  -> Redondea un número decimal a su base ej: 4.9 -> 4 , o 3.4 -> 3 */
@@ -84,6 +84,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         })
     }
+    //Función de botones celular
+/*     document.getElementById('btnLeft').addEventListener('click', moveLeft)
+    document.getElementById('btnRigth').addEventListener('click', moveRight)
+    document.getElementById('btnRotate').addEventListener('click', rotate)
+    document.getElementById('btnDown').addEventListener('click', moveDown) */
+
+
+/*     btnRigth.addEventListener('click', () => {
+        moveRight()
+    })
+
+    btnRotate.addEventListener('click', () => {
+        rotate()
+    })
+
+    btnDown.addEventListener('click', () => {
+        moveDown()
+    }) */
 
     //assign functions to keyCodes
     function control(e) {
@@ -97,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             moveDown()
         }
     }
-    document.addEventListener('keyup', control)
+    document.addEventListener('keydown', control)
 
     //--------------------------------------------------move down function yy
 
@@ -235,11 +253,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (timerId) {
             clearInterval(timerId)//Usamos el mpetodo clearInterval y en su parámetro seleccionamos el timerId
             timerId = null //El tiempo de 1000 ns ahora será de 0
+            document.removeEventListener('keydown', control);
+            document.getElementById('btnLeft').removeEventListener('click', moveLeft);
+            document.getElementById('btnRigth').removeEventListener('click', moveRight);
+            document.getElementById('btnRotate').removeEventListener('click', rotate);
+            document.getElementById('btnDown').removeEventListener('click', moveDown);
         } else {//Si el botón vuelve a ser presionado
             draw()//Se dibuja la figura en el grid principal
             timerId = setInterval(moveDown, 1000)//Se activa el timerId con la función moveDown cada 1000ms
             nextRandom = Math.floor(Math.random() * theTetrominoes.length) //Se seleciona la proxima figura que queremos que aparezca en el mini-grid
             displayShape()//Dibuja la figura acabada de determinar con nextRandom
+            document.addEventListener('keydown', control);
+            document.getElementById('btnLeft').addEventListener('click', moveLeft);
+            document.getElementById('btnRigth').addEventListener('click', moveRight);
+            document.getElementById('btnRotate').addEventListener('click', rotate);
+            document.getElementById('btnDown').addEventListener('click', moveDown);
         }
     })
 
@@ -277,7 +305,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             //Termina el intervalo
             clearInterval(timerId)
+            undraw()
+            reload()
+            document.removeEventListener('keyup', control)
         }
     }
-
+    function reload(){
+        alert("¡Perdiste! Tu puntaje fué de: " + score)
+        if (alert){
+            window.location.reload();
+        }
+    }
 })
+
+
+
