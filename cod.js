@@ -1,12 +1,18 @@
+
 document.addEventListener('DOMContentLoaded', () => {
+    /* Asignación de variables y contantes
+    Array.from() -> Crea una nueva instancia de Array a partir de un objeto iterable, es decir, convierte los div´s en un array.
+    */
     const grid = document.querySelector('.grid')
     let squares = Array.from(document.querySelectorAll('.grid div'))
     const scoreDisplay = document.querySelector('#score')
     const startBtn = document.querySelector('#start-button')
     const width = 15
     let nextRandom = 0
-    let timerId
+    var timerId
     let score = 0
+
+    //Asignación de colores para los tetrominos
     const colors = [
         '#ffce2e',
         '#ff8775',
@@ -14,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '#9BFBE1',
         '#19e8ff'
     ]
-
-    //The Tetrominoes Cata
+    //Creacion de figuras o tetrominos mediante arrays con las variaciones posibles de los giros por figura. 
     const lTetromino = [
         [1, width + 1, width * 2 + 1, 2],
         [width, width + 1, width + 2, width * 2 + 2],
@@ -51,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [width, width + 1, width + 2, width + 3]
     ]
 
+    //Asignación de un array los tetrominos creados anteriormente
     const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino]
 
     let currentPosition = 4
@@ -103,7 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         moveDown()
     }) */
 
-    //assign functions to keyCodes
+    /*--------------------------------------------------Función controlador de fichas
+    Asigna una función a cada tecla por medio de un ciclo if*/
     function control(e) {
         if (e.keyCode === 37) {
             moveLeft()
@@ -165,27 +172,31 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() //Dibuja la figura
     }
 
-    //--------------------------------------------------move the tetromino right, unless is at the edge or there is a blockage
-    function moveRight() {
-        undraw()
-        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1) //
-        if (!isAtRightEdge) currentPosition += 1
+    //--------------------------------------------------move the tetromino Right
+    function moveRight() { //Cracion de la función moveRight
+        undraw() //Desdibuja la figura creada
+        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width-1) //Crea una constante con nombre isAtRightEdge para limitar el movimiento a la derecha, 
+        if (!isAtRightEdge) currentPosition += 1 //Si no se cumple la condición avanza una posición a la derecha
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-            currentPosition -= 1
+            currentPosition -= 1 //Si alguno de los tetrominos va hacia la derecha y choca con un square de clase taken retrocede un espacio
         }
-        draw()
+        draw()//Dibuja la figura
     }
 
 
     //--------------------------------------------------FIX ROTATION OF TETROMINOS A THE EDGE yy
     function isAtRight() {
-        return current.some(index => (currentPosition + index + 1) % width === 0)
+        return current.some(index => (currentPosition + index + 1) % width === 0) 
     }
 
+    /*--------------------------------------------------Funcion isAtLeft
+    Se crea la funcion para limitar la rotación de las fichas posteriormente*/
     function isAtLeft() {
         return current.some(index => (currentPosition + index) % width === 0)
     }
 
+    /*--------------------------------------------------Funcion checkRotatedPosition
+    Se crea la funcion para limitar la rotación de las fichas posteriormente*/
     function checkRotatedPosition(P) {
         P = P || currentPosition       //get current position.  Then, check if the piece is near the left side.
         if ((P + 1) % width < 4) {         //add 1 because the position index can be 1 less than where the piece is (with how they are indexed).     
@@ -213,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkRotatedPosition()
         draw() //Se dibuja la figura
     }
-    /////////
 
 
 
@@ -247,9 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    //--------------------------------------------------add functionality to the button
-    startBtn.addEventListener('click', () => {//Añadomos un evento de click al botón
-        //Si el botón es presionado restablecemos el tiempo de intervalo a 0 (timerId = setInterval(moveDown, 1000) -> timerId = setInterval(0))
+    startBtn.addEventListener('click', () => {
         if (timerId) {
             clearInterval(timerId)//Usamos el mpetodo clearInterval y en su parámetro seleccionamos el timerId
             timerId = null //El tiempo de 1000 ns ahora será de 0
@@ -269,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnRotate').addEventListener('click', rotate);
             document.getElementById('btnDown').addEventListener('click', moveDown);
         }
+        return timerId
     })
 
     //--------------------------------------------------add score yy
@@ -292,12 +301,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 squares.forEach(cell => grid.appendChild(cell))//para cada fila eliminada añadimos otra con appendChild
             }
         }
+        return score
     }
 
-    //--------------------------------------------------game over
-    function gameOver() { //se crea la función gameOver
-
-        //Si alguno de los suquares actuales contiene la clase de taken
+    function gameOver() {
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
 
             //Termina el contador de score y reemplaza el conenido por "end"
@@ -320,3 +327,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    let angulo_fondo = Math.random() * 10
+        let tono_fondo = Math.random() * 10
+        setInterval(() => {
+            document.body.style.background = `linear-gradient(
+                ${angulo_fondo}deg, 
+                hsl(${tono_fondo},100%,50%),
+                hsl(${tono_fondo},100%,0%)
+            )`
+            angulo_fondo += Math.random()
+            tono_fondo += Math.random()
+        }, 10);
