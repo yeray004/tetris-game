@@ -1,18 +1,17 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    /* Asignación de variables y contantes
-    Array.from() -> Crea una nueva instancia de Array a partir de un objeto iterable, es decir, convierte los div´s en un array.
-    */
+    /* Asignación de contantes.
+    querySelector ->Devolverá el primer descendiente del elemento elementoBase que coincida con el grupo de selectores especificado*/
     const grid = document.querySelector('.grid')
-    let squares = Array.from(document.querySelectorAll('.grid div'))
     const scoreDisplay = document.querySelector('#score')
     const startBtn = document.querySelector('#start-button')
+    // Asignación de valores a variables y constantes
     const width = 15
     let nextRandom = 0
-    var timerId
+    let timerId
     let score = 0
-
-    //Asignación de colores para los tetrominos
+    //Array.from() -> Crea una nueva instancia de Array a partir de un objeto iterable, es decir, convierte los div´s en un array.
+    let squares = Array.from(document.querySelectorAll('.grid div'))
+    //Creación de array con colores que conformaran los tetrominos
     const colors = [
         '#ffce2e',
         '#ff8775',
@@ -20,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '#9BFBE1',
         '#19e8ff'
     ]
-    //Creacion de figuras o tetrominos mediante arrays con las variaciones posibles de los giros por figura. 
+
+    //Creacion de tetrominos mediante arrays, cada array contendrá dentro de si mismo 4 arrays que conforma las variaciones de giros posibles de los tetrominos. 
     const lTetromino = [
         [1, width + 1, width * 2 + 1, 2],
         [width, width + 1, width + 2, width * 2 + 2],
@@ -56,17 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
         [width, width + 1, width + 2, width + 3]
     ]
 
-    //Asignación de un array los tetrominos creados anteriormente
+    // Asignación de un array que contenga los tetrominos creados
     const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino]
 
+    //Asignación de posición inicial de los tetrominos
     let currentPosition = 4
     let currentRotation = 0
 
-    console.log(theTetrominoes[0][0])
-
-    //--------------------------------------------------randomly select a Tetromino and its first rotation yy
-
-    /*  Para esta parcolorste del código utilizamos los siguientes métodos:
+    /* Se empleó los siguientes métodos:
     Math.random() -> Nos da un número random de los elementos de array junto al .length
     .length       -> Es un metodo introducído que nos ayuda a saber qué tan largo es nuestro array
     Math.floor()  -> Redondea un número decimal a su base ej: 4.9 -> 4 , o 3.4 -> 3 */
@@ -74,42 +71,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let random = Math.floor(Math.random() * theTetrominoes.length) //La variable random que escoge un número random del array theTetrominoes.length y lo redondea a su base
     let current = theTetrominoes[random][currentRotation] //El primer array llama a un tetromino al azar, el segundo lo deja en su primer posición
 
-    //draw the Tetromino 
+    //Funcion dibujar
     function draw() {
         current.forEach(index => { //para cada elemento con forEach se le agrega: Código dentro del parénresis con un arrow function al index de cada array (index0, index1, index2, ...))
             squares[currentPosition + index].classList.add('tetromino') //Accedemos a la clase de ese elemento con classList y añadimos con add la clase de tetromino
-            squares[currentPosition + index].style.backgroundColor = colors[random] //
+            squares[currentPosition + index].style.backgroundColor = colors[random] //Asignacion de color de manera aleatoria
         })
     }
 
-    //--------------------------------------------------undraw the Tetromino yy
+    //Función Desdibujar
     function undraw() { //Se crea la función de borrar
         current.forEach(index => {//para cada elemento con forEach se le agrega: Código dentro del parénresis con un arrow function al index de cada array (index0, index1, index2, ...))
             squares[currentPosition + index].classList.remove('tetromino')  //Removemos la clase de tetromino
-            squares[currentPosition + index].style.backgroundColor = ''
+            squares[currentPosition + index].style.backgroundColor = '' 
 
         })
     }
-    //Función de botones celular
-/*     document.getElementById('btnLeft').addEventListener('click', moveLeft)
+
+    /* Función de botones celular
+    document.getElementById('btnLeft').addEventListener('click', moveLeft)
     document.getElementById('btnRigth').addEventListener('click', moveRight)
     document.getElementById('btnRotate').addEventListener('click', rotate)
-    document.getElementById('btnDown').addEventListener('click', moveDown) */
+    document.getElementById('btnDown').addEventListener('click', moveDown)
 
-
-/*     btnRigth.addEventListener('click', () => {
+    btnRigth.addEventListener('click', () => {
         moveRight()
     })
-
     btnRotate.addEventListener('click', () => {
         rotate()
     })
-
     btnDown.addEventListener('click', () => {
         moveDown()
     }) */
 
-    /*--------------------------------------------------Función controlador de fichas
+    /*Función controlador de fichas
     Asigna una función a cada tecla por medio de un ciclo if*/
     function control(e) {
         if (e.keyCode === 37) {
@@ -124,11 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     document.addEventListener('keydown', control)
 
-    //--------------------------------------------------move down function yy
+    //Funcion mover abajo
 
-    /* Para esta sección del código usamos el método setInterval() para realizar una funciónnen la que cada 1000 ms el tetromino se desplace hasta abajo
+    /* Para esta sección del código usamos el método 
+    setInterval() para realizar una funciónnen la que cada 1000 ms el tetromino se desplace hasta abajo
     dentro de la sección de código add functionality to the button encontamos en su parámetro el move moveDown.
-
     timerId = setInterval(moveDown, 1000) -> timerId ya está declarada como variable en dentro de las primeras líneas del código  */
 
     function moveDown() { //Se crea la función moveDown
@@ -138,12 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
         freeze() // Detenemos el movimiento de "caída" con la función freeze
     }
 
-    //--------------------------------------------------freeze function
-    function freeze() { //Se crea la función freeze
-        /* Si algúno (some) de los squares que crea el tetromino actual con index y width (Los que ejecutan el movimiento de caída) contiene un squeare
-        con la clase taken */
+    //Funcion congelar
+    function freeze() {
+        // Si algúno (some) de los squares que crea el tetromino actual con index y width (Los que ejecutan el movimiento de caída) contiene un squeare con la clase taken
         if (current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) { 
-            //para cada uno de los cuadrados que fromen la figura añada la clase de taken
+            //para cada uno de los cuadrados que formen la figura añada la clase de taken
             current.forEach(index => squares[currentPosition + index].classList.add('taken'))
             //start a new tetromino falling
             random = nextRandom
@@ -157,14 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //--------------------------------------------------move the tetromino left, unless is at the edge or there is a blockage yy
+    //Funcion mover izquierda. unless is at the edge or there is a blockage
     function moveLeft() { //Se crea la función moveLeft
         undraw() //Des dibuja la figura
-        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0) /* Se crea una variable que con el
-        currentPosition y su item (index0) dividido por su ancho deje exactamente 0 en su residuo */
+        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0) //Se crea una variable que con el currentPosition y su item (index0) dividido por su ancho deje exactamente 0 en su residuo 
 
-        if (!isAtLeftEdge) currentPosition -= 1 /* si el statement es ture el bang (!) hará que este sea falso, ejecuntamdo el if
-        y permitiendo que la figura se pueda desplazar a la izquierda */
+        if (!isAtLeftEdge) currentPosition -= 1 // si el statement es ture el bang (!) hará que este sea falso, ejecuntamdo el if y permitiendo que la figura se pueda desplazar a la izquierda
 
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
             currentPosition += 1 //Si alguno de los tetrominos va hacia la izquierda y choca con un square de clase taken retrocede un espacio
@@ -172,31 +164,30 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() //Dibuja la figura
     }
 
-    //--------------------------------------------------move the tetromino Right
-    function moveRight() { //Cracion de la función moveRight
+   //Funcion mover derecha. unless is at the edge or there is a blockage
+    function moveRight() {
         undraw() //Desdibuja la figura creada
-        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width-1) //Crea una constante con nombre isAtRightEdge para limitar el movimiento a la derecha, 
+        const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1) //Crea una constante con nombre isAtRightEdge para limitar el movimiento a la derecha,
         if (!isAtRightEdge) currentPosition += 1 //Si no se cumple la condición avanza una posición a la derecha
-        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) { 
             currentPosition -= 1 //Si alguno de los tetrominos va hacia la derecha y choca con un square de clase taken retrocede un espacio
         }
-        draw()//Dibuja la figura
+        draw() //Dibuja la figura
     }
 
 
-    //--------------------------------------------------FIX ROTATION OF TETROMINOS A THE EDGE yy
+    /*Funcion es derecha 
+    Se crea la funcion para limitar la rotación de las fichas posteriormente*/
     function isAtRight() {
-        return current.some(index => (currentPosition + index + 1) % width === 0) 
+        return current.some(index => (currentPosition + index + 1) % width === 0)
     }
-
-    /*--------------------------------------------------Funcion isAtLeft
+    /*Funcion es izquierda 
     Se crea la funcion para limitar la rotación de las fichas posteriormente*/
     function isAtLeft() {
         return current.some(index => (currentPosition + index) % width === 0)
     }
 
-    /*--------------------------------------------------Funcion checkRotatedPosition
-    Se crea la funcion para limitar la rotación de las fichas posteriormente*/
+    // Funcion verificar posicion de rotacion
     function checkRotatedPosition(P) {
         P = P || currentPosition       //get current position.  Then, check if the piece is near the left side.
         if ((P + 1) % width < 4) {         //add 1 because the position index can be 1 less than where the piece is (with how they are indexed).     
@@ -213,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //--------------------------------------------------rotate the tetromino
+    //Funcion rotar
     function rotate() {
         undraw() //Desdibuja la fugra
         currentRotation++ //pasa por cada uno de los arrays con un increment operator
@@ -225,16 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
         draw() //Se dibuja la figura
     }
 
-
-
-    //--------------------------------------------------show up-next tetromino in mini-grid display yy
-    //Creamos tres variables
     const displaySquares = document.querySelectorAll('.mini-grid div') //Seleccionamos dentro del documento todos los elementos de clase .mini-grid y etiquetas div
     const displayWidth = 4 //width de nuestros tetrominos
     const displayIndex = 0 //index 0 de nuestros tetrominos (posición)
 
-
-    //--------------------------------------------------the Tetrominos without rotations
     const upNextTetrominoes = [ //Creamos un array con la figura inicial de los tetrominos
         [1, displayWidth + 1, displayWidth * 2 + 1, 2], //lTetromino
         [0, displayWidth, displayWidth + 1, displayWidth * 2 + 1], //zTetromino
@@ -243,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [1, displayWidth + 1, displayWidth * 2 + 1, displayWidth * 3 + 1] //iTetromino
     ]
 
-    //--------------------------------------------------display the shape in the mini-grid display yy
+    //Funcion forma de pantalla
     function displayShape() { //Se crea lafunción displayShape
         //removemos  cualquier rastro de los tetrominos de todo el grid
         displaySquares.forEach(square => {
@@ -257,30 +242,32 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    startBtn.addEventListener('click', () => {
+    startBtn.addEventListener('click', () => {//Añadomos un evento de click al botón de pausa
+        //Si el botón es presionado restablecemos el tiempo de intervalo a 0 (timerId = setInterval(moveDown, 1000) -> timerId = setInterval(0))
         if (timerId) {
-            clearInterval(timerId)//Usamos el mpetodo clearInterval y en su parámetro seleccionamos el timerId
+            clearInterval(timerId)//Usamos el metodo clearInterval y en su parámetro seleccionamos el timerId
             timerId = null //El tiempo de 1000 ns ahora será de 0
             document.removeEventListener('keydown', control);
-            document.getElementById('btnLeft').removeEventListener('click', moveLeft);
-            document.getElementById('btnRigth').removeEventListener('click', moveRight);
-            document.getElementById('btnRotate').removeEventListener('click', rotate);
-            document.getElementById('btnDown').removeEventListener('click', moveDown);
+            //Se elimina el evento click con la finalidad en que las fichas no tengas moviemiento en pausa
+            document.getElementById('btnLeft').removeEventListener('click', moveLeft); //Remoción del evento click del boton izquierdo
+            document.getElementById('btnRigth').removeEventListener('click', moveRight); //Remoción del evento click del boton derecha
+            document.getElementById('btnRotate').removeEventListener('click', rotate); //Remoción del evento click del boton girar
+            document.getElementById('btnDown').removeEventListener('click', moveDown); //Remoción del evento click del boton bajar
         } else {//Si el botón vuelve a ser presionado
             draw()//Se dibuja la figura en el grid principal
             timerId = setInterval(moveDown, 1000)//Se activa el timerId con la función moveDown cada 1000ms
             nextRandom = Math.floor(Math.random() * theTetrominoes.length) //Se seleciona la proxima figura que queremos que aparezca en el mini-grid
             displayShape()//Dibuja la figura acabada de determinar con nextRandom
             document.addEventListener('keydown', control);
-            document.getElementById('btnLeft').addEventListener('click', moveLeft);
-            document.getElementById('btnRigth').addEventListener('click', moveRight);
-            document.getElementById('btnRotate').addEventListener('click', rotate);
-            document.getElementById('btnDown').addEventListener('click', moveDown);
+            //Se agrega el evento click cuando este en despausa o inicie el juego con la finalidad en que las fichas tengan movimiento 
+            document.getElementById('btnLeft').addEventListener('click', moveLeft); //Agrega el evento click del boton izquierdo
+            document.getElementById('btnRigth').addEventListener('click', moveRight); //Agrega el evento click del boton derecho 
+            document.getElementById('btnRotate').addEventListener('click', rotate); //Agrega el evento click del boton girar
+            document.getElementById('btnDown').addEventListener('click', moveDown); //Agrega el evento click del boton abajo
         }
-        return timerId
     })
 
-    //--------------------------------------------------add score yy
+    //Función añadir puntaje
     function addScore() {//Se crea la función addScore
         for (let i = 0; i < 374; i += width) { //se añade una nueva fila si el número de divs es menor a 374 (cantidad de elementos de dis contados como array)
             const row = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8, i + 9, i + 10, i +11, i + 12, i + 13, i + 14] /* Cantidad de divs en el ancho
@@ -301,15 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 squares.forEach(cell => grid.appendChild(cell))//para cada fila eliminada añadimos otra con appendChild
             }
         }
-        return score
     }
 
-    function gameOver() {
+    //Funcion perder
+    function gameOver() { //se crea la función gameOver
+        //Si alguno de los suquares actuales contiene la clase de taken
         if (current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-
             //Termina el contador de score y reemplaza el conenido por "end"
             scoreDisplay.innerHTML = 'end'
-
             //Termina el intervalo
             clearInterval(timerId)
             undraw()
@@ -317,24 +303,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.removeEventListener('keyup', control)
         }
     }
+
+    //Función recargar
     function reload(){
+        //Muestra en pantalla alerta sobre el estado del juego y el puntaje alcanzado
         alert("¡Perdiste! Tu puntaje fué de: " + score)
         if (alert){
+            //Recarga el juego
             window.location.reload();
         }
     }
 })
-
-
-
-    let angulo_fondo = Math.random() * 10
-        let tono_fondo = Math.random() * 10
-        setInterval(() => {
-            document.body.style.background = `linear-gradient(
-                ${angulo_fondo}deg, 
-                hsl(${tono_fondo},100%,50%),
-                hsl(${tono_fondo},100%,0%)
-            )`
-            angulo_fondo += Math.random()
-            tono_fondo += Math.random()
-        }, 10);
