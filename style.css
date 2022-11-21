@@ -5,7 +5,7 @@
 }
 
 h3 {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 4vmin;
     text-align: center;
     font-family: 'Tourney', cursive;
@@ -19,7 +19,7 @@ h3 {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background-color: black;
+    gap: 4vmin;
 }
 
 /*  Centra el contenedor principal*/
@@ -33,7 +33,7 @@ h3 {
 /* Propiedades flex grid y minigrid */
 .grid,
 .mini-grid {
-    background-color: #0d0b0b;
+    background-color: #000000;
     display: flex;
     flex-wrap: wrap;
 }
@@ -41,7 +41,7 @@ h3 {
 /*  Borde del grid y mini grid (próxima ficha) */
 .grid div,
 .mini-grid div {
-    border: 0.1vmin solid #2b2b2b;
+    border: 0.1vmin solid #222020;
     height: 3.4vmin;
     width: 3.4vmin;
 }
@@ -60,7 +60,7 @@ h3 {
 
 /*  Items sección derecha   */
 .items {
-    height: 80vmin;
+    height: 70vmin;
     width: 20vmin;
     display: flex;
     align-items: center;
@@ -76,7 +76,7 @@ h3 {
 
 #start-button {
     display: inline-flex;
-    background-color: #27bead;
+    background-color: #f6f6f6;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -86,7 +86,12 @@ h3 {
     cursor: pointer;
     transition: .3s ease all;
     border-radius: 2vmin;
-    border: rgb(243, 243, 243) 2px solid;
+    border: rgb(0, 0, 0) 2px solid;
+}
+
+#score {
+    color: #f6f4f4;
+    text-decoration:none;
 }
 
 #start-button:hover {
@@ -104,7 +109,7 @@ h3 {
 
     .grid div,
     .mini-grid div {
-        border: 0.1vmin solid #2b2b2b;
+        border: 0.1vmin solid #222020;
         height: 3vmin;
         width: 3vmin;
     }
@@ -127,9 +132,10 @@ h3 {
         width: 11vmin;
         height: 11vmin;
         margin: 2px;
-        background-color: #27bead;
+        background-color: #f6f4f4;
+        color: #000000;
         border-radius: 2vmin;
-        border: rgb(243, 243, 243) 2px solid;
+        border: rgb(0, 0, 0) 2px solid;
         transition: ease-in-out .2s;
         font-size: 20px;
     }

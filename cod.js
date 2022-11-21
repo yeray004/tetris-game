@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnRigth').addEventListener('click', moveRight); //Agrega el evento click del boton derecho 
             document.getElementById('btnRotate').addEventListener('click', rotate); //Agrega el evento click del boton girar
             document.getElementById('btnDown').addEventListener('click', moveDown); //Agrega el evento click del boton abajo
-            document.querySelector('#start-button').style.backgroundColor = "#27bead";
+            document.querySelector('#start-button').style.backgroundColor = "#f6f6f6";
             document.querySelector('#start-button').innerHTML = '<i class="fa-solid fa-pause"></i>'
         }
     })
@@ -302,4 +302,18 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.reload();
         }
     }
+
+    //Asignación de variables de angulo de transición y tono de fondo
+    let angulo_fondo = Math.random() * 1
+    let tono_fondo = Math.random() * 1
+    /*El metodo setInterval () ejecuta las propiedades especificadas para el backgraund del body en un intervalo de tiempo de 30n, se asigna el valor del angulo, el cual ira variando, al igual que los tonos de fondo, al ser un degradado se emplea dos tonos con variacion de opacidad, al final se añade un operador de asignación que permite aumentar el valor del angulo y color, generando de esta manera la variacion de color y angulo */
+    setInterval(() => {
+        document.body.style.background = `linear-gradient(
+            ${angulo_fondo}deg, 
+            hsl(${tono_fondo},100%,80%),
+            hsl(${tono_fondo},100%,20%)
+        )`
+        angulo_fondo += Math.random()
+        tono_fondo += Math.random()
+    }, 30);
 })
