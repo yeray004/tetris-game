@@ -11,7 +11,7 @@ h3 {
     font-family: 'Tourney', cursive;
     padding-bottom: 4vmin;
 }
-
+/*  Contenedor de la poantalla de juego y demás elementos   */
 .container {
     display: flex;
     flex-direction: column;
@@ -22,6 +22,7 @@ h3 {
     background-color: black;
 }
 
+/*  Centra el contenedor principal*/
 .center_container {
     display: flex;
     justify-content: center;
@@ -29,6 +30,7 @@ h3 {
     gap: 10vmin;
 }
 
+/* Propiedades flex grid y minigrid */
 .grid,
 .mini-grid {
     background-color: #0d0b0b;
@@ -36,6 +38,7 @@ h3 {
     flex-wrap: wrap;
 }
 
+/*  Borde del grid y mini grid (próxima ficha) */
 .grid div,
 .mini-grid div {
     border: 0.1vmin solid #2b2b2b;
@@ -43,16 +46,19 @@ h3 {
     width: 3.4vmin;
 }
 
+/*  Tamaño del grid principal */
 .grid {
     width: 51vmin;
     height: 85vmin;
 }
 
+/*  Tamaño del mini grid - próxima ficha */
 .mini-grid {
     width: 13.6vmin;
     height: 13.6vmin;
 }
 
+/*  Items sección derecha   */
 .items {
     height: 80vmin;
     width: 20vmin;
@@ -62,6 +68,7 @@ h3 {
     justify-content: space-around;
 }
 
+/*  Botón start y pause */
 .button {
     width: 100%;
     position: relative;
@@ -79,41 +86,20 @@ h3 {
     cursor: pointer;
     transition: .3s ease all;
     border-radius: 2vmin;
+    border: rgb(243, 243, 243) 2px solid;
 }
 
 #start-button:hover {
     background: #52525d;
 }
 
+/*  Elemenos ocultos del juego  */
 .btn-grid, 
 .btm{
     display: none;
 }
 
-/* .colores{ */
-    /* 1 */
-/*     background-color: linear-gradient(#27bead, #000);
-    background-color: #FDDF7E;
-    background-color: #FAA99D;
-    background-color: #CE97FD;
-    background-color: #9BFBE1;
-    background-color: #67EBFA; */
-
-    /* 2 */
-/*     background-color: #ffce2e;
-    background-color: #ff8775;
-    background-color: #bc70ff;
-    background-color: #5cffd3;
-    background-color: #19e8ff; */
-
-    /* 3 */
-/*     background-color: #FDDF7E;
-    background-color: #FAA99D;
-    background-color: #CE97FD;
-    background-color: #9BFBE1;
-    background-color: #67EBFA;
-} */
-
+/*  Media queryes del juego*/
 @media(max-width:1023px){
 
     .grid div,
@@ -134,25 +120,28 @@ h3 {
     }
 
     .btn-grid{
-        display: grid;
-        grid-template-columns: 70px 70px;
-        grid-template-rows: 70px 70px;
+        display: flex;
     }
 
     .btn-play{
+        width: 11vmin;
+        height: 11vmin;
         margin: 2px;
         background-color: #27bead;
-        border-radius: 10px;
-        border: rgb(243, 243, 243) 3px solid;
+        border-radius: 2vmin;
+        border: rgb(243, 243, 243) 2px solid;
         transition: ease-in-out .2s;
+        font-size: 20px;
     }
 
     .btn-play:hover{
         background: #52525d;
     }
-
-    i{
-        font-size: 20px;
-    }
     
+}
+@media(max-width:375px){
+    .btn-play{
+        width: 15vmin;
+        height: 15vmin;
+    }
 }

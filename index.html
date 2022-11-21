@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css"></link>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>Tetris</title>
-    <script src="https://kit.fontawesome.com/db2bca9693.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css"></link>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@900&display=swap" rel="stylesheet">
@@ -13,10 +13,11 @@
 </head>
 
 <body>
-
+<!-- Contenedor de todos los elementos -->
     <div class="container">
-
+<!--         Contenedor de todos los elemenos menos botónes vrs táctil -->
         <div class="center_container">
+            <!-- Grid de panatalla principal -->
             <div class="grid">
                 <div></div>
                 <div></div>
@@ -393,6 +394,7 @@
                 <div></div>
                 <div></div>
                 <div></div>
+                <!-- Elementos específicos, final de juego -->
                 <div class="taken btm"></div>
                 <div class="taken btm"></div>
                 <div class="taken btm"></div>
@@ -409,6 +411,7 @@
                 <div class="taken btm"></div>
                 <div class="taken btm"></div>
             </div>
+<!--             Sección de items a la derecha del Grid principal -->
             <section class="items">
                 <div>
                     <h3>Next</h3>
@@ -431,17 +434,19 @@
                         <div></div>
                     </div>
                 </div>
+<!--                 Puntaje del jugador -->
                 <div class="score">
                     <h3>Score</h3>
                     <h3><span id="score">0</h3>
                 </div>
+<!--                 Botón de pause y start -->
                 <div class="button">
                     <h3>Pause Start</h3>
                     <button id="start-button"><span><i class="fa-solid fa-play"></i></span></button>
                 </div>
             </section>
         </div>
-    
+<!-- Botones movimiento de ficha vrs táctil -->
         <div class="btn-grid">
             <button id="btnLeft" class="btn-play">
                 <i class="fa-solid fa-arrow-left"></i>
@@ -457,7 +462,7 @@
             </button>
         </div>
     </div>
-
+<!-- Scripts de iconos en la página y documento .js -->
     <script src="cod.js" charset="utf-8"></script>
     <script src="https://kit.fontawesome.com/e07414d0a4.js" crossorigin="anonymous"></script>
 </body>

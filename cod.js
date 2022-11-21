@@ -88,22 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    /* Función de botones celular
-    document.getElementById('btnLeft').addEventListener('click', moveLeft)
-    document.getElementById('btnRigth').addEventListener('click', moveRight)
-    document.getElementById('btnRotate').addEventListener('click', rotate)
-    document.getElementById('btnDown').addEventListener('click', moveDown)
-
-    btnRigth.addEventListener('click', () => {
-        moveRight()
-    })
-    btnRotate.addEventListener('click', () => {
-        rotate()
-    })
-    btnDown.addEventListener('click', () => {
-        moveDown()
-    }) */
-
     /*Función controlador de fichas
     Asigna una función a cada tecla por medio de un ciclo if*/
     function control(e) {
