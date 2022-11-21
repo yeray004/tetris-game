@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnRigth').removeEventListener('click', moveRight); //Remoción del evento click del boton derecha
             document.getElementById('btnRotate').removeEventListener('click', rotate); //Remoción del evento click del boton girar
             document.getElementById('btnDown').removeEventListener('click', moveDown); //Remoción del evento click del boton bajar
-            document.querySelector('#start-button').style.backgroundColor = "#52525d";
+            document.querySelector('#start-button').style.backgroundColor = "#52525d"; 
             document.querySelector('#start-button').innerHTML = '<i class="fa-solid fa-play"></i>'
 
         } else {//Si el botón vuelve a ser presionado
