@@ -1,98 +1,65 @@
-body{
-    box-sizing: border-box;
-}
 *{
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
 }
 
+h3 {
+    color: white;
+    font-size: 4vmin;
+    text-align: center;
+    font-family: 'Tourney', cursive;
+    padding-bottom: 4vmin;
+}
+
 .container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.center_container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
-    gap: 5vmin;
+    gap: 10vmin;
 }
 
-.items {
-    height: 90vmin;
-    width: 20vmin;
+.grid,
+.mini-grid {
+    background-color: #0d0b0b;
     display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.grid div,
+.mini-grid div {
+    border: 0.1vmin solid #2b2b2b;
+    height: 3.4vmin;
+    width: 3.4vmin;
 }
 
 .grid {
     width: 51vmin;
     height: 85vmin;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: #27bead;
-}
-
-.btm{
-    display: none;
-    width: 51vmin;
-    height: 85vmin;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.grid div {
-    height: 3.4vmin;
-    width: 3.4vmin;
-    border: 0.1vmin solid #27bead;
-    background: #27bead;
-}
-
-.tetromino {
-    background-color: blue;
 }
 
 .mini-grid {
-    width: 15vmin;
-    height: 15vmin;
+    width: 13.6vmin;
+    height: 13.6vmin;
+}
+
+.items {
+    height: 80vmin;
+    width: 20vmin;
     display: flex;
-    flex-wrap: wrap;
-    background-color: linear-gradient(#27bead, #000);
-}
-
-.mini-grid div {
-    height: 3.6vmin;
-    width: 3.6vmin;
-}
-
-.btn-grid{
-    display: grid;
-    grid-template-columns: 70px 70px;
-    grid-template-rows: 70px 70px;
-}
-
-.btn-play{
-    margin: 2px;
-    background-color: #27bead;
-    border-radius: 10px;
-    border: rgb(243, 243, 243) 3px solid;
-    transition: ease-in-out .2s;
-    display: none;
-}
-
-.btn-play:hover{
-    background-color: #00d1b8;
-}
-
-i{
-    color: rgb(243, 243, 243);
-    font-size: 20px;
-}
-
-.score {
-    font-size: 4vmin;
-    text-align: center;
-    font-family: 'Tourney', cursive;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .button {
@@ -102,11 +69,11 @@ i{
 
 #start-button {
     display: inline-flex;
-    background-color: rgb(197, 197, 197);
+    background-color: #27bead;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 7vmin;
+    height: 8vmin;
     font-size: 3vmin;
     border: none;
     cursor: pointer;
@@ -118,13 +85,74 @@ i{
     background: #52525d;
 }
 
-
-@media (min-width:801px) {
-    
+.btn-grid, 
+.btm{
+    display: none;
 }
 
-@media(max-width:1024px){
-    .btn-play{
-        display: block;
+/* .colores{ */
+    /* 1 */
+/*     background-color: linear-gradient(#27bead, #000);
+    background-color: #FDDF7E;
+    background-color: #FAA99D;
+    background-color: #CE97FD;
+    background-color: #9BFBE1;
+    background-color: #67EBFA; */
+
+    /* 2 */
+/*     background-color: #ffce2e;
+    background-color: #ff8775;
+    background-color: #bc70ff;
+    background-color: #5cffd3;
+    background-color: #19e8ff; */
+
+    /* 3 */
+/*     background-color: #FDDF7E;
+    background-color: #FAA99D;
+    background-color: #CE97FD;
+    background-color: #9BFBE1;
+    background-color: #67EBFA;
+} */
+
+@media(max-width:1023px){
+
+    .grid div,
+    .mini-grid div {
+        border: 0.1vmin solid #2b2b2b;
+        height: 3vmin;
+        width: 3vmin;
     }
+
+    .grid {
+        width: 45vmin;
+        height: 75vmin;
+    }
+
+    .mini-grid {
+        width: 12vmin;
+        height: 12vmin;
+    }
+
+    .btn-grid{
+        display: grid;
+        grid-template-columns: 70px 70px;
+        grid-template-rows: 70px 70px;
+    }
+
+    .btn-play{
+        margin: 2px;
+        background-color: #27bead;
+        border-radius: 10px;
+        border: rgb(243, 243, 243) 3px solid;
+        transition: ease-in-out .2s;
+    }
+
+    .btn-play:hover{
+        background: #52525d;
+    }
+
+    i{
+        font-size: 20px;
+    }
+    
 }
