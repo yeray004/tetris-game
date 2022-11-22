@@ -5,7 +5,7 @@
 <p><b>Colaboradores:</b>
 <a href="https://github.com/lidvegla"> Catalina Vega</a> y <a href="https://github.com/yeray004"> Yeray Guachetá</a>.
 </br>
-<b>Documentación tecnica</b>
+<b>Documentación técnica:</b>
 <ul>
   <li> <a href="https://docs.google.com/document/d/1KQsjihBtpUHgwndGIg46okf5CSEx-MCBrM0y8z6VMaw/edit?usp=sharing">Documentación Catalina </a></li>
   <li> <a href="https://docs.google.com/document/d/1hJJIWNDJ1ave8G6AtFYSA6UZTRfxbMHwA_EdDvO6xjY/edit?usp=sharing">Documentación Yeray </a></li>
